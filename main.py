@@ -1,5 +1,6 @@
 import json
-from auth import Login, SignUp
+from auth import SignUp, Login
+from user import User
 
 with open('books.json', 'r', encoding='utf-8') as f:
     book = json.load(f) 
@@ -14,9 +15,10 @@ class Main() :
         print('전자도서관입니다.')
         a = input('1.로그인  2.회원가입  0.종료\n')
         if a == '1' :
-            Login.first()
+            User.first(Login.first())
         if a == '2' :
             SignUp.first()
+            User.first(Login.first())
 
 ma = Main()
 ma.intro()
