@@ -3,22 +3,47 @@ from auth import SignUp, Login
 from user import User
 
 with open('books.json', 'r', encoding='utf-8') as f:
-    book = json.load(f) 
+    get_book =json.load(f) 
 
-def get_book() :
-    return book
+
+with open('manager_data.json', 'r', encoding='utf-8') as f:
+    get_manager = json.load(f)
+
+
+with open('user_data.json', 'r', encoding='utf-8') as f:
+    get_user = json.load(f)
+
 
 class Main() :
     # def __init__(self):
     
     def intro(self) :
         print('전자도서관입니다.')
-        a = input('1.로그인  2.회원가입  0.종료\n')
-        if a == '1' :
-            User.first(Login.first())
-        if a == '2' :
-            SignUp.first()
-            User.first(Login.first())
+        while True :
+            a = input('1.로그인  2.회원가입  0.종료\n')
+            if a == '1' :
+                name, check = login.first()
+                if check == 0 :
+                    User.first(name)
+                #if check == 1 :
+                #매니저 코드 실행
+                
+            elif a == '2' :
+                SignUp.first()
+                name, check = login.first()
+                if check == 0 :
+                    User.first(name)
+                #if check == 1 :
+                    #매니저 코드 실행
+            elif a == '0' :
+                print('이용해주셔서 감사합니다.')
+                return 0
+            else :
+                print('잘못된 입력입니다. 다시 시도해주세요.')
+
+User = User(get_book)
+SignUp = SignUp(get_manager, get_user)
+login = Login(get_manager, get_user)
 
 ma = Main()
 ma.intro()
