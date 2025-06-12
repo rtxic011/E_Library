@@ -65,6 +65,11 @@ class User() :
     def bor(self) :
         print()
         print('- 대출 -')
+        borrowed_count = sum(1 for info in self.book.values() if info[-1] == self.ID)
+        if borrowed_count >= 5:
+            print('현재 대출 중인 책이 5권 이상입니다. 더 이상 대출할 수 없습니다.')
+            self.second()
+            return
         while True :
             print('대출 할 책을 골라주세요.')
             c, h = self.search(1)
@@ -90,7 +95,19 @@ class User() :
         for title, info in self.book.items() :
             if info[-1] == self.ID :
                 q[title] = info
+        overdue_days = {}
+        
         if len(q) >=1 :
-            print('반납할 책을 찾았습니다.')
+            print('대출한 책을 찾았습니다.')
             for title, info in q.items() :
-                print(f'{i}. {title} : {info[0]}. 반납 날짜, {info[-2]}')
+                due_str = info[-2]
+                due_date = datetime.datetime.strptime(due_str, '%Y.%m.%d')
+                today = datetime.datetime.now()
+                if today > due_date :
+                    days_overdue = (today - due_date).days
+                    overdue_days[title] = days_overdue
+                    status = f'현재 연체 중입니다. ({days_overdue}일 연체)'
+                else : 
+                    status = '정상 대출 중입니다.'
+                print(f'{i}. {title} : {info[0]}. 반납 날짜: {due_str} → {status}')
+                i += 1
