@@ -85,11 +85,19 @@ class User() :
             print('찾고 있는 책의 제목, 작가등을 입력해주세요.')
             print('모든 책 목록을 보시려면 엔터를 누르시면 됩니다.')
             a = input('입력하기 : ')
-            f = False
             i = 1
             print()
             print('[ 검색 결과 ]')
-            for title, inf in self.book.items():
+            a = a.lower()
+            f, i = self.se(a, q, False, i)
+            a = a.upper()
+            f, i = self.se(a, q, f, i)
+            # f = self.se(a, q)
+    
+    def se(self, a, q, f, i) :
+        f = bool(f)
+        i = i
+        for title, inf in self.book.items():
                 info = inf[:3]
                 if a in title or a in info:
                     if info[-1] == 'true' :
@@ -100,11 +108,11 @@ class User() :
                     q[title] = info
                     i += 1
                     f = True
-            if f == False :
+        if f == False :
                 print('검색 결과가 없습니다. 다시 시도해주세요.')
-            elif f == True :
-                return q
-    
+        elif f == True :
+            return q
+
     def bor(self) :
         print()
         print('- 대출 -')

@@ -51,3 +51,7 @@ class Login(SignUp) :
                     return a, 1
             else :
                 print('존재하지 않는 아이디입니다.')
+                while True :
+                    c = input('회원가입 하시겠습니까?(y/n) : ')
+                    if c in ['y', 'Y', 'ㅛ'] :
+                        return a, 2
