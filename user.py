@@ -65,8 +65,8 @@ class User() :
                 self.list()
                 break
             elif a == '0' :
-                return 0
-                # break
+                self.logout()
+                break
             else : 
                 print('잘못된 입력입니다. 다시 시도해주세요.')
     
@@ -204,6 +204,7 @@ class User() :
     def list(self) :
         print()
         print('- 현재 대출 목록 -')
+        print()
         q = {}
         for title, info in self.book.items() :
             if info[-1] == self.ID :
@@ -223,6 +224,19 @@ class User() :
                 else : 
                     status = '정상 대출 중입니다.'
                 print(status)
+                print()
                 print(f'{title} : {info[0]}. 반납 날짜: {due_str}')
         else :
             print(f'현재 {self.ID}님이 대출한 책이 없습니다.')
+        self.second()
+    
+    def logout(self) :
+        print()
+        while True :
+            a = ('로그 아웃 하시겠습니까?(y/n) :')
+            if a in ['y', 'Y', 'ㅛ'] :
+                print('로그아웃 되었습니다.')
+                return 0
+            else :
+                self.second()
+                break
