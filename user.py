@@ -49,22 +49,29 @@ class User() :
     
     def second(self) :
         print()
-        print('[ 1.도서조회  2.대출  3.반납  4.현재대출목록  0.종료 ]')
+        print('[ 1.도서조회  2.대출  3.반납  4.현재대출목록  0.로그아웃 ]')
         a = input('메뉴를 선택해, 번호를 입력해주세요. : ')
         if a == '1' :
-            self.search('0')
+            self.search()
         elif a == '2' :
             self.bor()
         elif a == '3' :
             self.retu()
     
-    def search(self, n) :
+    def search(self) :
         print()
-        if n == '0' :
-            print('- 도서조회 -')
+        print('- 도서조회 -')
+        # q = self.sear()
+        self.sear()
+        self.second()
+        
+        
+    def sear(self) :
         q = {}
         while True :
-            a = input('찾고 있는 책의 제목, 작가등을 입력해주세요. \n')
+            print('찾고 있는 책의 제목, 작가등을 입력해주세요.')
+            print('모든 책 목록을 보시려면 엔터를 누르시면 됩니다.')
+            a = input('입력하기 : ')
             f = False
             i = 1
             print()
@@ -75,15 +82,10 @@ class User() :
                     q[title] = info
                     i += 1
                     f = True
-            if f and n == 0 :
+            if f == False :
                 print('검색 결과가 없습니다. 다시 시도해주세요.')
-            elif n == '1':
-                a = input('대출할 책의 번호를 입력해주세요. : ')
-                key = list(q.keys())[a-1]
-                return key, q[key][0]
-            else :
-                self.second()
-                break
+            elif f == True :
+                return q
     
     def bor(self) :
         print()
@@ -98,20 +100,26 @@ class User() :
             self.second()
             return
         while True :
-            print('대출 할 책을 골라주세요.')
-            c, h = self.search(1)
-            a = input(f'[ {c} : {h} ]'+'를 대출 하시겠습니까?(y/n) : ')
-            if a in ['y', 'Y', 'ㅛ'] :
-                now = datetime.datetime.now()
-                date = now + datetime.timedelta(days=7)
-                print(f'{now.month}월 {now.day}일, 대출되었습니다.')
-                print(f'{date.month}월 {date.day}일까지 반납 부탁드립니다.')
-                #book.json 파일 수정
-                self.book[c][-1] = self.ID
-                self.book[c][-2] = f'{date.year}.{date.month}.{date.day}'
-                with open('books.json', 'w', encoding='utf-8') as f:
-                    json.dump(self.book, f, ensure_ascii=False, indent=4)
-                break
+            # print('대출 할 책을 골라주세요.')
+            q = self.sear()
+            print()
+            a = input('대출할 책의 번호를 입력해주세요. : ')
+            if a.isdigit() :
+                a = int(a)
+                key = list(q.keys())[a-1]
+                # c, h = self.search(1)
+                b = input(f'[ {key} : {q[key][0]} ]'+'를 대출 하시겠습니까?(y/n) : ')
+                if b in ['y', 'Y', 'ㅛ'] :
+                    now = datetime.datetime.now()
+                    date = now + datetime.timedelta(days=7)
+                    print(f'{now.month}월 {now.day}일, 대출되었습니다.')
+                    print(f'{date.month}월 {date.day}일까지 반납 부탁드립니다.')
+                    #book.json 파일 수정
+                    self.book[key][-1] = self.ID
+                    self.book[key][-2] = f'{date.year}.{date.month}.{date.day}'
+                    with open('books.json', 'w', encoding='utf-8') as f:
+                        json.dump(self.book, f, ensure_ascii=False, indent=4)
+                    break
         self.second()
     
     def retu(self) :

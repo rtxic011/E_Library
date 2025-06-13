@@ -40,18 +40,14 @@ class Login(SignUp) :
         while True :
             a = input('아이디 : ')
             if a in self.user_inf.keys() :
-                while True :
-                    b = input('비밀번호 : ')
-                    if b == self.user_inf[a] :
-                        print('로그인 완료')
-                        return a, 0
-                        break
-                    elif b != self.user_inf[a] :
-                        print('로그인 실패! 아이디와 비밀번호가 맞지 않습니다.')
-                        
-                    elif a in self.manager_inf.keys() and b == self.manager_inf[a] :
-                        print('관리자 로그인 완료')
-                        return a, 1
-                        break
+                b = input('비밀번호 : ')
+                if b == self.user_inf[a] :
+                    print('로그인 완료')
+                    return a, 0
+                elif b != self.user_inf[a] :
+                    print('로그인 실패! 아이디와 비밀번호가 맞지 않습니다.')
+                elif a in self.manager_inf.keys() and b == self.manager_inf[a] :
+                    print('관리자 로그인 완료')
+                    return a, 1
             else :
                 print('존재하지 않는 아이디입니다.')
