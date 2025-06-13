@@ -66,6 +66,7 @@ class User() :
                 break
             elif a == '0' :
                 self.logout()
+                print()
                 break
             else : 
                 print('잘못된 입력입니다. 다시 시도해주세요.')
@@ -88,7 +89,8 @@ class User() :
             i = 1
             print()
             print('[ 검색 결과 ]')
-            for title, info in self.book.items():
+            for title, inf in self.book.items():
+                info = inf[:3]
                 if a in title or a in info:
                     if info[-1] == 'true' :
                         ch = '대출 가능'
@@ -122,20 +124,24 @@ class User() :
             a = input('대출할 책의 번호를 입력해주세요. : ')
             if a.isdigit() :
                 a = int(a)
-                key = list(q.keys())[a-1]
-                # c, h = self.search(1)
-                b = input(f'[ {key} : {q[key][0]} ]'+'를 대출 하시겠습니까?(y/n) : ')
-                if b in ['y', 'Y', 'ㅛ'] :
-                    now = datetime.datetime.now()
-                    date = now + datetime.timedelta(days=7)
-                    print(f'{now.month}월 {now.day}일, 대출되었습니다.')
-                    print(f'{date.month}월 {date.day}일까지 반납 부탁드립니다.')
-                    #book.json 파일 수정
-                    self.book[key][-1] = self.ID
-                    self.book[key][-2] = f'{date.year}.{date.month}.{date.day}'
-                    with open('books.json', 'w', encoding='utf-8') as f:
-                        json.dump(self.book, f, ensure_ascii=False, indent=4)
-                    break
+                if 0 < a <= len(q) :
+                    key = list(q.keys())[a-1]
+                    # c, h = self.search(1)
+                    if q[key][-1] == 'true' :
+                        b = input(f'[ {key} : {q[key][0]} ]'+'를 대출 하시겠습니까?(y/n) : ')
+                        if b in ['y', 'Y', 'ㅛ'] :
+                            now = datetime.datetime.now()
+                            date = now + datetime.timedelta(days=7)
+                            print(f'{now.month}월 {now.day}일, 대출되었습니다.')
+                            print(f'{date.month}월 {date.day}일까지 반납 부탁드립니다.')
+                            #book.json 파일 수정
+                            self.book[key][-1] = self.ID
+                            self.book[key][-2] = f'{date.year}.{date.month}.{date.day}'
+                            with open('books.json', 'w', encoding='utf-8') as f:
+                                json.dump(self.book, f, ensure_ascii=False, indent=4)
+                            break
+                    else :
+                        print(f'[ {key} : {q[key][0]} ]는 현재 대출 중 입니다.')
         self.second()
     
     def retu(self) :
@@ -145,14 +151,21 @@ class User() :
         j = 0
         for title, info in self.book.items() :
             if info[-1] == self.ID :
-                q[title] = info[0]
+                # q[title] = info[0]
+                q[title] = info
         overdue_days = {}
         
         if len(q) >=1 :
             print('[대출 목록]')
+            i = 1
             for title, info in q.items() :
                 due_str = info[-2]
-                due_date = datetime.datetime.strptime(due_str, '%Y.%m.%d')
+                # due_date = datetime.datetime.strptime(due_str, '%Y.%m.%d')
+                try:
+                    due_date = datetime.datetime.strptime(due_str, '%Y.%m.%d')
+                except ValueError:
+                    print(f'{title} : 반납 날짜 형식이 잘못되어 연체 여부를 확인할 수 없습니다.')
+                    continue
                 today = datetime.datetime.now()
                 if today > due_date :
                     days_overdue = (today - due_date).days
@@ -160,9 +173,9 @@ class User() :
                     status = f'현재 연체 중입니다. ({days_overdue}일 연체)'
                 else : 
                     status = '정상 대출 중입니다.'
-                print(f'{i}. {title} : {info[0]}. 반납 날짜: {due_str} → {status}')
+                print(f'{i}. {title} : {info[0]}. 기한 날짜: {due_str} → {status}')
                 i += 1
-                self.rn(q, j)
+            self.rn(q, j)
         else :
             print(f'현재 {self.ID}님이 대출한 책이 없습니다.')
             return
@@ -233,7 +246,7 @@ class User() :
     def logout(self) :
         print()
         while True :
-            a = ('로그 아웃 하시겠습니까?(y/n) :')
+            a = input('로그 아웃 하시겠습니까?(y/n) :')
             if a in ['y', 'Y', 'ㅛ'] :
                 print('로그아웃 되었습니다.')
                 return 0
