@@ -23,7 +23,8 @@ class User() :
                 self.sample_books[title] = info[:-1]
         sample = random.sample(list(self.sample_books.items()), min(3, len(self.sample_books)))
         for title, info in sample:
-            print(f'{title} : 작가,{info[0]}.  출간일,{info[1]}.  출판사,{info[2]}.')
+            print(f'{title} :\n 작가,{info[0]}.  출간일,{info[1]}.  출판사,{info[2]}.')
+            print()
             
         print('-'*40)
         self.second()
@@ -34,6 +35,10 @@ class User() :
         a = input('메뉴를 선택해, 번호를 입력해주세요. : ')
         if a == '1' :
             self.search('0')
+        elif a == '2' :
+            self.bor()
+        elif a == '3' :
+            self.retu()
     
     def search(self, n) :
         print()
@@ -48,11 +53,11 @@ class User() :
             print('[ 검색 결과 ]')
             for title, info in self.book.items():
                 if a in title or a in info:
-                    print(f'{i}. {title}', end='')
+                    print(f'{i}. {title} : {info[0]}')
                     q[title] = info
                     i += 1
                     f = True
-            if not f and n == 0 :
+            if f and n == 0 :
                 print('검색 결과가 없습니다. 다시 시도해주세요.')
             elif n == '1':
                 a = input('대출할 책의 번호를 입력해주세요. : ')
@@ -94,7 +99,7 @@ class User() :
         i = 1
         for title, info in self.book.items() :
             if info[-1] == self.ID :
-                q[title] = info
+                q[title] = info[0]
         overdue_days = {}
         
         if len(q) >=1 :
@@ -111,3 +116,42 @@ class User() :
                     status = '정상 대출 중입니다.'
                 print(f'{i}. {title} : {info[0]}. 반납 날짜: {due_str} → {status}')
                 i += 1
+        
+        while True :
+            a = input('반납 할 책의 번호를 입력해주세요. : ')
+            if a.isdigit() :
+                a = int(a)
+                if 1 <= a <= len(q) :
+                    name2 = list(q.keys())[a-1]
+                    writer = q[name2][0]
+                    b = input(f'{name2} : {writer}을(를) 반납하시겠습니까?')
+                    if b in ['y', 'Y', 'ㅛ'] :
+                        #book.json 파일 수정
+                        self.book[name2][-1] = "true"
+                        self.book[name2][-2] = ""
+                        with open('books.json', 'w', encoding='utf-8') as f:
+                            json.dump(self.book, f, ensure_ascii=False, indent=4)
+    
+    def list(self) :
+        print()
+        print('- 현재 대출 목록 -')
+        q = {}
+        for title, info in self.book.items() :
+            if info[-1] == self.ID :
+                q[title] = info
+        overdue_days = {}
+        
+        if len(q) >=1 :
+            print(f'{self.ID}님의 대출 목록')
+            for title, info in q.items() :
+                due_str = info[-2]
+                due_date = datetime.datetime.strptime(due_str, '%Y.%m.%d')
+                today = datetime.datetime.now()
+                if today > due_date :
+                    days_overdue = (today - due_date).days
+                    overdue_days[title] = days_overdue
+                    status = f'현재 연체 중입니다. ({days_overdue}일 연체)'
+                else : 
+                    status = '정상 대출 중입니다.'
+                print(status)
+                print(f'{title} : {info[0]}. 반납 날짜: {due_str}')
