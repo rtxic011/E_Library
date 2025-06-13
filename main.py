@@ -19,6 +19,9 @@ class Main() :
     
     def intro(self) :
         print('전자도서관입니다.')
+        print('-'*40)
+        print('전자도서관에 오신 것을 환영합니다. \n번호를 입력하여 다음 메뉴로 이동하세요.')
+        print('-'*40)
         while True :
             a = input('1.로그인  2.회원가입  0.종료\n')
             if a == '1' :
