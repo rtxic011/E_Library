@@ -44,6 +44,8 @@ class User() :
                     days_overdue = (today - due_date).days
                     overdue_days[title] = days_overdue
                     self.check = False
+                else : 
+                    self.check = True
     
     def second(self) :
         print()
@@ -162,6 +164,7 @@ class User() :
                             json.dump(self.book, f, ensure_ascii=False, indent=4)
                         j += 1
                         del q[name2]
+                        self.che()
                         c = input('추가적으로 반납을 진행하시겠나요?(y/n) : ')
                         if b in ['y', 'Y', 'ㅛ'] and j <= len(q) :
                             self.rn(q, j)
