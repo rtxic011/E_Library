@@ -24,7 +24,7 @@ class User() :
                 self.sample_books[title] = info[:-1]
         sample = random.sample(list(self.sample_books.items()), min(3, len(self.sample_books)))
         for title, info in sample:
-            print(f'{title} :\n 작가,{info[0]}.  출간일,{info[1]}.  출판사,{info[2]}.')
+            print(f'{title} :\n 작가: {info[0]}.  출간일: {info[1]}.  출판사: {info[2]}.')
             print()
             
         print('-'*40)
@@ -49,14 +49,26 @@ class User() :
     
     def second(self) :
         print()
-        print('[ 1.도서조회  2.대출  3.반납  4.현재대출목록  0.로그아웃 ]')
-        a = input('메뉴를 선택해, 번호를 입력해주세요. : ')
-        if a == '1' :
-            self.search()
-        elif a == '2' :
-            self.bor()
-        elif a == '3' :
-            self.retu()
+        while True :
+            print('[ 1.도서조회  2.대출  3.반납  4.현재대출목록  0.로그아웃 ]')
+            a = input('메뉴를 선택해, 번호를 입력해주세요. : ')
+            if a == '1' :
+                self.search()
+                break
+            elif a == '2' :
+                self.bor()
+                break
+            elif a == '3' :
+                self.retu()
+                break
+            elif a == '4' :
+                self.list()
+                break
+            elif a == '0' :
+                return 0
+                # break
+            else : 
+                print('잘못된 입력입니다. 다시 시도해주세요.')
     
     def search(self) :
         print()
@@ -78,7 +90,11 @@ class User() :
             print('[ 검색 결과 ]')
             for title, info in self.book.items():
                 if a in title or a in info:
-                    print(f'{i}. {title} : {info[0]}')
+                    if info[-1] == 'true' :
+                        ch = '대출 가능'
+                    else :
+                        ch = '대출 불가능'
+                    print(f'{i}. {title} : {info[0]} [{ch}]')
                     q[title] = info
                     i += 1
                     f = True
