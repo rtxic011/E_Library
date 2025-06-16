@@ -22,16 +22,11 @@ class User() :
         for title, info in self.book.items() :
             if info[-1] == "true" :
                 self.sample_books[title] = info[:-1]
-        if len(self.sample_books) == 0:
-            print("추천할 수 있는 도서가 없습니다.")
-        else:
-            try:
-                sample = random.sample(list(self.sample_books.items()), min(3, len(self.sample_books)))
-                for title, info in sample:
-                    print(f'{title} :\n 작가: {info[0]}.  출간일: {info[1]}.  출판사: {info[2]}.')
-                    print()
-            except ValueError:
-                print("추천 도서 표본 추출 중 오류가 발생했습니다.")
+        sample = random.sample(list(self.sample_books.items()), min(3, len(self.sample_books)))
+        for title, info in sample:
+            print(f'{title} :\n 작가: {info[0]}.  출간일: {info[1]}.  출판사: {info[2]}.')
+            print()
+            
         print('-'*40)
         self.second()
         
@@ -95,11 +90,7 @@ class User() :
         while True :
             print('찾고 있는 책의 제목, 작가등을 입력해주세요.')
             print('모든 책 목록을 보시려면 엔터를 누르시면 됩니다.')
-            try:
-                a = input('입력하기 : ')
-            except EOFError:
-                print("입력이 중단되었습니다.")
-                return
+            a = input('입력하기 : ')
             i = 1
             print()
             print('[ 검색 결과 ]')
@@ -219,7 +210,9 @@ class User() :
             return
     
     def rn(self, q, j) :
+        q = q
         i = 1
+        j = j
         while True :
             try:
                 a = input('반납 할 책의 번호를 입력해주세요. : ')

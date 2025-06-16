@@ -32,15 +32,15 @@ class Main() :
                 name, check = login.first()
                 if check == 0 :
                     User.first(name)
-                #if check == 1 :
-                #매니저 코드 실행
+                if check == 1 :
+                    Manager.first(name)
                 elif check == '2' :
                     SignUp.first()
                     name, check = login.first()
                     if check == 0 :
                         User.first(name)
-                    #if check == 1 :
-                        #매니저 코드 실행
+                    if check == 1 :   
+                        Manager.first(name)
                 
             elif a == '2' :
                 SignUp.first()
