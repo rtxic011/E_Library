@@ -1,6 +1,7 @@
 import json
 from auth import SignUp, Login
 from user import User
+from manager import Manager
 import time
 
 with open('books.json', 'r', encoding='utf-8') as f:
@@ -56,6 +57,7 @@ class Main() :
                 print('잘못된 입력입니다. 다시 시도해주세요.')
 
 User = User(get_book)
+Manager = Manager(get_book)
 SignUp = SignUp(get_manager, get_user)
 login = Login(get_manager, get_user)
 
