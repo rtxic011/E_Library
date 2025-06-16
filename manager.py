@@ -15,7 +15,7 @@ class Manager() :
     
     def second(self) :
         print()
-        print('[ 1.도서추가  2.도서삭제 3.도서정보수정 4.도서상태수정 0.종료 ]')
+        print('[ 1.도서추가  2.도서삭제  3.도서정보수정  4.도서상태수정  5.도서조회 0.종료 ]')
         a = input('메뉴를 선택해, 번호를 입력해주세요. : ')
         if a == '1' :
             self.add()
@@ -26,7 +26,42 @@ class Manager() :
         elif a == '4':
             self.edit_status()
         elif a == '0' :
-            return 0  
+            return 0
+        
+    
+    def search(self):
+        print()
+        print('- 도서 조회 -')
+        q = {}
+        while True:
+            print('찾고 있는 책의 제목, 작가 등을 입력해주세요.')
+            print('모든 책 목록을 보시려면 엔터를 누르시면 됩니다.')
+            a = input('입력하기 : ')
+            i = 1
+            print()
+            print('[ 검색 결과 ]')
+            a = a.lower()
+            q, i = self.sear(a, q, False, i)
+            a = a.upper()
+            q, i = self.sear(a, q, True, i)
+            if q:
+                break
+
+    def sear(self, a, q, f, i):
+        for title, inf in self.book.items():
+            info = inf[:3]
+            if a in title or a in info:
+                if inf[-1] == 'true':
+                    ch = '대출 가능'
+                else:
+                    ch = '대출 중'
+                print(f'{i}. {title} : {info[0]} [{ch}]')
+                q[title] = info
+                i += 1
+                f = True
+        if not f:
+            print('검색 결과가 없습니다. 다시 시도해주세요.')
+        return q, i
 
     def add(self):
         print()
