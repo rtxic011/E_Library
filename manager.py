@@ -36,26 +36,45 @@ class Manager() :
         author = input('저자를 입력하세요: ')
         pubdate = input('출간일(예: 2023.01.15): ')
         publisher = input('출판사를 입력하세요: ')
-        self.book[title] = [author, pubdate, publisher, "", "true"]
-        with open('books.json', 'w', encoding='utf-8') as f:
-            json.dump(self.book, f, ensure_ascii=False, indent=4)
-        print(f'"{title}" 도서가 추가되었습니다.')
+        while True:
+            confirm = input(f'{title} : 작가, {author}.  출판일, {pubdate}. 출판사, {publisher}. 도서를 추가하시겠습니까? (y/n): ')
+            if confirm in ['y', 'Y', 'ㅛ']:
+                self.book[title] = [author, pubdate, publisher, "", "true"]
+                with open('books.json', 'w', encoding='utf-8') as f:
+                    json.dump(self.book, f, ensure_ascii=False, indent=4)
+                print(f'"{title}" 도서가 추가되었습니다.')
+                break
+            elif confirm == 'n':
+                print('도서 추가가 취소되었습니다.')
+                break
+            else:
+                print("y 또는 n을 입력해주세요.")
 
     def delete(self):
         print()
         print('- 도서 삭제 -')
         title = input('삭제할 책 제목을 입력하세요: ')
         if title in self.book:
-            del self.book[title]
-            with open('books.json', 'w', encoding='utf-8') as f:
-                json.dump(self.book, f, ensure_ascii=False, indent=4)
-            print(f'"{title}" 도서가 삭제되었습니다.')
+            while True:
+                confirm = input(f'"{title}" 도서를 삭제하시겠습니까? (y/n): ')
+                if confirm in ['y', 'Y', 'ㅛ']:
+                    del self.book[title]
+                    with open('books.json', 'w', encoding='utf-8') as f:
+                        json.dump(self.book, f, ensure_ascii=False, indent=4)
+                    print(f'"{title}" 도서가 삭제되었습니다.')
+                    break
+                elif confirm == 'n':
+                    print('도서 삭제가 취소되었습니다.')
+                    break
+                else:
+                    print("y 또는 n을 입력해주세요.")
         else:
             print('해당 책이 존재하지 않습니다.')
 
     def edit(self):
         print()
         print('- 도서 정보 수정 -')
+        
         title = input('수정할 책 제목을 입력하세요: ')
         if title not in self.book:
             print('해당 책이 존재하지 않습니다.')
@@ -64,25 +83,21 @@ class Manager() :
         author = input('새 저자 (엔터 시 변경 없음): ')
         pubdate = input('새 출간일 (엔터 시 변경 없음): ')
         publisher = input('새 출판사 (엔터 시 변경 없음): ')
-        if author:
-            self.book[title][0] = author
-        if pubdate:
-            self.book[title][1] = pubdate
-        if publisher:
-            self.book[title][2] = publisher
-        with open('books.json', 'w', encoding='utf-8') as f:
-            json.dump(self.book, f, ensure_ascii=False, indent=4)
-        print(f'"{title}" 도서 정보가 수정되었습니다.')
-
-    def loan(self):
-        print()
-        print('- 현재 대출 목록 -')
-        i = 1
-        found = False
-        for title, info in self.book.items():
-            if info[-1] != 'true':
-                print(f'{i}. {title} : {info[0]} - 대출자: {info[-1]}, 반납기한: {info[-2]}')
-                i += 1
-                found = True
-        if not found:
-            print('현재 대출 중인 도서가 없습니다.')
+        while True:
+            confirm = input(f'"{title}" 도서 정보를 수정하시겠습니까? (y/n): ')
+            if confirm in ['y', 'Y', 'ㅛ']:
+                if author:
+                    self.book[title][0] = author
+                if pubdate:
+                    self.book[title][1] = pubdate
+                if publisher:
+                    self.book[title][2] = publisher
+                with open('books.json', 'w', encoding='utf-8') as f:
+                    json.dump(self.book, f, ensure_ascii=False, indent=4)
+                print(f'"{title}" 도서 정보가 수정되었습니다.')
+                break
+            elif confirm == 'n':
+                print('도서 정보 수정이 취소되었습니다.')
+                break
+            else:
+                print("y 또는 n을 입력해주세요.")

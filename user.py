@@ -136,17 +136,22 @@ class User() :
                     key = list(q.keys())[a-1]
                     # c, h = self.search(1)
                     if q[key][-1] == 'true' :
-                        b = input(f'[ {key} : {q[key][0]} ]'+'를 대출 하시겠습니까?(y/n) : ')
-                        if b in ['y', 'Y', 'ㅛ'] :
-                            now = datetime.datetime.now()
-                            date = now + datetime.timedelta(days=7)
-                            print(f'{now.month}월 {now.day}일, 대출되었습니다.')
-                            print(f'{date.month}월 {date.day}일까지 반납 부탁드립니다.')
-                            #book.json 파일 수정
-                            self.book[key][-1] = self.ID
-                            self.book[key][-2] = f'{date.year}.{date.month}.{date.day}'
-                            with open('books.json', 'w', encoding='utf-8') as f:
-                                json.dump(self.book, f, ensure_ascii=False, indent=4)
+                        while True:
+                            b = input(f'[ {key} : {q[key][0]} ]'+'를 대출 하시겠습니까?(y/n) : ')
+                            if b in ['y', 'Y', 'ㅛ']:
+                                now = datetime.datetime.now()
+                                date = now + datetime.timedelta(days=7)
+                                print(f'{now.month}월 {now.day}일, 대출되었습니다.')
+                                print(f'{date.month}월 {date.day}일까지 반납 부탁드립니다.')
+                                #book.json 파일 수정
+                                self.book[key][-1] = self.ID
+                                self.book[key][-2] = f'{date.year}.{date.month}.{date.day}'
+                                with open('books.json', 'w', encoding='utf-8') as f:
+                                    json.dump(self.book, f, ensure_ascii=False, indent=4)
+                                break
+                            elif b in ['n', 'N']:
+                                break
+                        if b in ['y', 'Y', 'ㅛ']:
                             break
                     else :
                         print(f'[ {key} : {q[key][0]} ]는 현재 대출 중 입니다.')
@@ -200,25 +205,32 @@ class User() :
                 if 1 <= a <= len(q) :
                     name2 = list(q.keys())[a-1]
                     writer = q[name2][0]
-                    b = input(f'{name2} : {writer}을(를) 반납하시겠습니까?(y/n) : ')
-                    if b in ['y', 'Y', 'ㅛ'] :
-                        #book.json 파일 수정
-                        self.book[name2][-1] = "true"
-                        self.book[name2][-2] = ""
-                        with open('books.json', 'w', encoding='utf-8') as f:
-                            json.dump(self.book, f, ensure_ascii=False, indent=4)
-                        j += 1
-                        del q[name2]
-                        self.che()
-                        c = input('추가적으로 반납을 진행하시겠나요?(y/n) : ')
-                        if b in ['y', 'Y', 'ㅛ'] and j <= len(q) :
-                            self.rn(q, j)
-                            print('[대출 목록]')
-                            for title, info in q.items() :
-                                print(f'{i}. {title} : {info[0]}')
-                                self.rn(q, j)
-                                break
-                        else :
+                    while True:
+                        b = input(f'{name2} : {writer}을(를) 반납하시겠습니까?(y/n) : ')
+                        if b in ['y', 'Y', 'ㅛ']:
+                            #book.json 파일 수정
+                            self.book[name2][-1] = "true"
+                            self.book[name2][-2] = ""
+                            with open('books.json', 'w', encoding='utf-8') as f:
+                                json.dump(self.book, f, ensure_ascii=False, indent=4)
+                            j += 1
+                            del q[name2]
+                            self.che()
+                            while True:
+                                c = input('추가적으로 반납을 진행하시겠나요?(y/n) : ')
+                                if c in ['y', 'Y', 'ㅛ'] and j <= len(q) :
+                                    self.rn(q, j)
+                                    print('[대출 목록]')
+                                    for title, info in q.items() :
+                                        print(f'{i}. {title} : {info[0]}')
+                                        self.rn(q, j)
+                                        break
+                                    break
+                                elif c in ['n', 'N']:
+                                    self.second()
+                                    break
+                            break
+                        elif b in ['n', 'N']:
                             self.second()
                             break
     
