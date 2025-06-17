@@ -97,20 +97,21 @@ class User() :
             a_lower = a.lower()
             f, i = self.se(a_lower, q, False, i)
             a_upper = a.upper()
-            f, i = self.se(a_upper, q, f, i)
+            f2, i = self.se(a_upper, q, f, i)
+            f = f or f2
             if not f:
                 print('검색 결과가 없습니다. 다시 시도해주세요.')
                 continue
             else:
                 break
         return q
-    
+
     def se(self, a, q, f, i) :
         f = bool(f)
         i = i
         for title, inf in self.book.items():
             info = inf[:3]
-            if a in title or a in info:
+            if (a in title or a in info) and title not in q:
                 if info[-1] == 'true' :
                     ch = '대출 가능'
                 else :
@@ -207,7 +208,7 @@ class User() :
             self.rn(q, j)
         else :
             print(f'현재 {self.ID}님이 대출한 책이 없습니다.')
-            return
+            self.second()
     
     def rn(self, q, j) :
         q = q

@@ -55,3 +55,5 @@ class Login(SignUp) :
                     c = input('회원가입 하시겠습니까?(y/n) : ')
                     if c in ['y', 'Y', 'ㅛ'] :
                         return a, 2
+                    else :
+                        self.first()
