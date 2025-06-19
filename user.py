@@ -77,6 +77,7 @@ class User() :
                 break
             else : 
                 print('잘못된 입력입니다. 다시 시도해주세요.')
+                print()
     
     def search(self) :
         print()
@@ -101,6 +102,7 @@ class User() :
             f = f or f2
             if not f:
                 print('검색 결과가 없습니다. 다시 시도해주세요.')
+                print()
                 continue
             else:
                 break
@@ -110,9 +112,9 @@ class User() :
         f = bool(f)
         i = i
         for title, inf in self.book.items():
-            info = inf[:3]
+            info = inf[:4]
             if (a in title or a in info) and title not in q:
-                if info[-1] == 'true' :
+                if inf[-1] == 'true' :
                     ch = '대출 가능'
                 else :
                     ch = '대출 불가능'
@@ -146,14 +148,19 @@ class User() :
             except EOFError:
                 print("입력이 중단되었습니다.")
                 return
+            if len(a) <= 0 :
+                print('입력이 없습니다. 다시 시도해주세요.')
+                print()
             if a.isdigit() :
                 a = int(a)
                 if 0 < a <= len(q) :
                     key = list(q.keys())[a-1]
-                    if q[key][-1] == 'true' :
+                    # 검색된 책의 정보를 가져오되, self.book에서 직접 참조하도록 수정
+                    book_info = self.book[key]
+                    if book_info[-1] == 'true' :
                         while True:
                             try:
-                                b = input(f'[ {key} : {q[key][0]} ]'+'를 대출 하시겠습니까?(y/n) : ')
+                                b = input(f'[ {key} : {book_info[0]} ]'+'를 대출 하시겠습니까?(y/n) : ')
                             except EOFError:
                                 print("입력이 중단되었습니다.")
                                 return
@@ -163,8 +170,9 @@ class User() :
                                 print(f'{now.month}월 {now.day}일, 대출되었습니다.')
                                 print(f'{date.month}월 {date.day}일까지 반납 부탁드립니다.')
                                 try:
-                                    self.book[key][-1] = self.ID
-                                    self.book[key][-2] = f'{date.year}.{date.month}.{date.day}'
+                                    # 대출 정보 업데이트
+                                    book_info[-2] = f'{date.year}.{date.month}.{date.day}'  # 반납 예정일
+                                    book_info[-1] = self.ID  # 대출자 ID
                                     with open('books.json', 'w', encoding='utf-8') as f:
                                         json.dump(self.book, f, ensure_ascii=False, indent=4)
                                 except Exception as e:
@@ -175,7 +183,8 @@ class User() :
                         if b in ['y', 'Y', 'ㅛ']:
                             break
                     else :
-                        print(f'[ {key} : {q[key][0]} ]는 현재 대출 중 입니다.')
+                        print(f'[ {key} : {book_info[0]} ]는 현재 대출 중 입니다.')
+                        print()
         self.second()
     
     def retu(self) :
