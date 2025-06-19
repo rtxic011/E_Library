@@ -180,10 +180,20 @@ class Manager() :
                         print("입력이 중단되었습니다.")
                         return
                     if confirm in ['y', 'Y', 'ㅛ']:
+                        print(f'현재 정보: {self.book[title]}')
+                        author = input('새 저자 (엔터 시 변경 없음): ')
+                        pubdate = input('새 출간일 (엔터 시 변경 없음): ')
+                        publisher = input('새 출판사 (엔터 시 변경 없음): ')
                         try:
-                            self.book[title][0] = author
-                            self.book[title][1] = pubdate
-                            self.book[title][2] = publisher
+                            if author == '':
+                                author = self.book[title][0]
+                            if pubdate == '':
+                                pubdate = self.book[title][1]
+                            if publisher == '':
+                                publisher = self.book[title][2]
+                            # self.book[title][0] = author
+                            # self.book[title][1] = pubdate
+                            # self.book[title][2] = publisher
                             with open('books.json', 'w', encoding='utf-8') as f:
                                 json.dump(self.book, f, ensure_ascii=False, indent=4)
                         except Exception as e:
@@ -205,10 +215,7 @@ class Manager() :
         #     print('해당 책이 존재하지 않습니다.')
         #     self.second()
         #     return
-        # print(f'현재 정보: {self.book[title]}')
-        # author = input('새 저자 (엔터 시 변경 없음): ')
-        # pubdate = input('새 출간일 (엔터 시 변경 없음): ')
-        # publisher = input('새 출판사 (엔터 시 변경 없음): ')
+
         # while True:
         #     confirm = input(f'"{title}" 도서 정보를 수정하시겠습니까? (y/n): ')
         #     if confirm in ['y', 'Y', 'ㅛ']:

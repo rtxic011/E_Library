@@ -113,7 +113,7 @@ class User() :
         i = i
         for title, inf in self.book.items():
             info = inf[:4]
-            if (a in title or a in info) and title not in q:
+            if (a in title or a in inf) and title not in q:
                 if inf[-1] == 'true' :
                     ch = '대출 가능'
                 else :
