@@ -32,7 +32,7 @@ class Manager() :
         elif a == '5':
             self.search()
         elif a == '0' :
-            return 0
+            self.logout()
         else:
             print("잘못된 입력입니다.")
             self.second()
@@ -56,7 +56,12 @@ class Manager() :
             q, i = self.sear(a_lower, q, False, i)
             a_upper = a.upper()
             q, i = self.sear(a_upper, q, True, i)
+            
             if q:
+                self.second()
+                break
+            else:
+                print('검색 결과가 없습니다. 다시 시도해주세요.')
                 break
 
     def sear(self, a, q, f, i):
@@ -108,9 +113,11 @@ class Manager() :
                     print(f"파일 저장 중 오류 발생: {e}")
                     return
                 print(f'"{title}" 도서가 추가되었습니다.')
+                self.second()
                 break
             elif confirm in ['n', 'N']:
                 print('도서 추가가 취소되었습니다.')
+                self.second()
                 break
             else:
                 print("y 또는 n을 입력해주세요.")
@@ -123,30 +130,36 @@ class Manager() :
         except EOFError:
             print("입력이 중단되었습니다.")
             return
-        if title in self.book:
-            while True:
-                try:
-                    confirm = input(f'"{title}" 도서를 삭제하시겠습니까? (y/n): ')
-                except EOFError:
-                    print("입력이 중단되었습니다.")
-                    return
-                if confirm in ['y', 'Y', 'ㅛ']:
+        check = True
+        for name, info in self.book.items() :
+            if title in name or title in info :
+                while True:
                     try:
-                        del self.book[title]
-                        with open('books.json', 'w', encoding='utf-8') as f:
-                            json.dump(self.book, f, ensure_ascii=False, indent=4)
-                    except Exception as e:
-                        print(f"파일 저장 중 오류 발생: {e}")
+                        confirm = input(f'"{title} : {info[0]}" 도서를 삭제하시겠습니까? (y/n): ')
+                        check = False
+                    except EOFError:
+                        print("입력이 중단되었습니다.")
                         return
-                    print(f'"{title}" 도서가 삭제되었습니다.')
-                    break
-                elif confirm in ['n', 'N']:
-                    print('도서 삭제가 취소되었습니다.')
-                    break
-                else:
-                    print("y 또는 n을 입력해주세요.")
-        else:
-            print('해당 책이 존재하지 않습니다.')
+                    if confirm in ['y', 'Y', 'ㅛ']:
+                        try:
+                            del self.book[title]
+                            with open('books.json', 'w', encoding='utf-8') as f:
+                                json.dump(self.book, f, ensure_ascii=False, indent=4)
+                        except Exception as e:
+                            print(f"파일 저장 중 오류 발생: {e}")
+                            return
+                        print(f'"{title}" 도서가 삭제되었습니다.')
+                        self.second()
+                        break
+                    elif confirm in ['n', 'N']:
+                        print('도서 삭제가 취소되었습니다.')
+                        self.second()
+                        break
+                    else:
+                        print("y 또는 n을 입력해주세요.")
+            if check == True :
+                print('해당 책이 존재하지 않습니다.')
+                self.second()
 
     def edit(self):
         print()
@@ -156,35 +169,70 @@ class Manager() :
         except EOFError:
             print("입력이 중단되었습니다.")
             return
-        if title not in self.book:
+        check = True
+        for name, info in self.book.items() :
+            if title in name or title in info :
+                while True:
+                    try:
+                        confirm = input(f'"{title} : {info[0]}" 도서를 수정하시겠습니까? (y/n): ')
+                        check = False
+                    except EOFError:
+                        print("입력이 중단되었습니다.")
+                        return
+                    if confirm in ['y', 'Y', 'ㅛ']:
+                        try:
+                            self.book[title][0] = author
+                            self.book[title][1] = pubdate
+                            self.book[title][2] = publisher
+                            with open('books.json', 'w', encoding='utf-8') as f:
+                                json.dump(self.book, f, ensure_ascii=False, indent=4)
+                        except Exception as e:
+                            print(f"파일 저장 중 오류 발생: {e}")
+                            return
+                        print(f'"{title}" 도서 정보가 수정되었습니다.')
+                        self.second()
+                        break
+                    elif confirm in ['n', 'N']:
+                        print('도서 정보 수정이 취소되었습니다.')
+                        self.second()
+                        break
+                    else:
+                        print("y 또는 n을 입력해주세요.")   
+        if check == True :
             print('해당 책이 존재하지 않습니다.')
+            self.second()
             return
-        print(f'현재 정보: {self.book[title]}')
-        author = input('새 저자 (엔터 시 변경 없음): ')
-        pubdate = input('새 출간일 (엔터 시 변경 없음): ')
-        publisher = input('새 출판사 (엔터 시 변경 없음): ')
-        while True:
-            confirm = input(f'"{title}" 도서 정보를 수정하시겠습니까? (y/n): ')
-            if confirm in ['y', 'Y', 'ㅛ']:
-                if author:
-                    self.book[title][0] = author
-                if pubdate:
-                    self.book[title][1] = pubdate
-                if publisher:
-                    self.book[title][2] = publisher
-                try:
-                    with open('books.json', 'w', encoding='utf-8') as f:
-                        json.dump(self.book, f, ensure_ascii=False, indent=4)
-                except Exception as e:
-                    print(f"파일 저장 중 오류 발생: {e}")
-                    return
-                print(f'"{title}" 도서 정보가 수정되었습니다.')
-                break
-            elif confirm in ['n', 'N']:
-                print('도서 정보 수정이 취소되었습니다.')
-                break
-            else:
-                print("y 또는 n을 입력해주세요.")
+        #     print('해당 책이 존재하지 않습니다.')
+        #     self.second()
+        #     return
+        # print(f'현재 정보: {self.book[title]}')
+        # author = input('새 저자 (엔터 시 변경 없음): ')
+        # pubdate = input('새 출간일 (엔터 시 변경 없음): ')
+        # publisher = input('새 출판사 (엔터 시 변경 없음): ')
+        # while True:
+        #     confirm = input(f'"{title}" 도서 정보를 수정하시겠습니까? (y/n): ')
+        #     if confirm in ['y', 'Y', 'ㅛ']:
+        #         if author:
+        #             self.book[title][0] = author
+        #         if pubdate:
+        #             self.book[title][1] = pubdate
+        #         if publisher:
+        #             self.book[title][2] = publisher
+        #         try:
+        #             with open('books.json', 'w', encoding='utf-8') as f:
+        #                 json.dump(self.book, f, ensure_ascii=False, indent=4)
+        #         except Exception as e:
+        #             print(f"파일 저장 중 오류 발생: {e}")
+        #             return
+        #         print(f'"{title}" 도서 정보가 수정되었습니다.')
+        #         self.second()
+        #         break
+        #     elif confirm in ['n', 'N']:
+        #         print('도서 정보 수정이 취소되었습니다.')
+        #         self.second()
+        #         break
+        #     else:
+        #         print("y 또는 n을 입력해주세요.")
     
     def edit_status(self):
         print()
@@ -194,8 +242,14 @@ class Manager() :
         except EOFError:
             print("입력이 중단되었습니다.")
             return
-        if title not in self.book:
+        check = True
+        for name, info in self.book.items() :
+            if title in name or title in info :
+                check = False
+                break
+        if check :
             print('해당 책이 존재하지 않습니다.')
+            self.second()
             return
         info = self.book[title]
         status = "대출 가능" if info[-1] == "true" else "대출 중"
@@ -227,9 +281,25 @@ class Manager() :
                     print(f"파일 저장 중 오류 발생: {e}")
                     return
                 print(f'"{title}" 도서 상태가 수정되었습니다.')
+                self.second()
                 break
             elif confirm.lower() == 'n':
                 print('도서 상태 수정이 취소되었습니다.')
+                self.second()
                 break
             else:
                 print("y 또는 n을 입력해주세요.")
+    
+    def logout(self) :
+        print()
+        while True :
+            try:
+                a = input('로그 아웃 하시겠습니까?(y/n) :')
+            except EOFError:
+                print("입력이 중단되었습니다.")
+                return 0
+            if a in ['y', 'Y', 'ㅛ'] :
+                print('로그아웃 되었습니다.')
+                return 0
+            else :
+                self.second()

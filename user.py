@@ -251,24 +251,25 @@ class User() :
                             j += 1
                             del q[name2]
                             self.che()
-                            while True:
-                                try:
-                                    c = input('추가적으로 반납을 진행하시겠나요?(y/n) : ')
-                                except EOFError:
-                                    print("입력이 중단되었습니다.")
-                                    return
-                                if c in ['y', 'Y', 'ㅛ'] and j <= len(q) :
-                                    self.rn(q, j)
-                                    print('[대출 목록]')
-                                    for title, info in q.items() :
-                                        print(f'{i}. {title} : {info[0]}')
+                            if len(q) >= 1 :
+                                while True:
+                                    try:
+                                        c = input('추가적으로 반납을 진행하시겠나요?(y/n) : ')
+                                    except EOFError:
+                                        print("입력이 중단되었습니다.")
+                                        return
+                                    if c in ['y', 'Y', 'ㅛ'] and j <= len(q) :
                                         self.rn(q, j)
+                                        print('[대출 목록]')
+                                        for title, info in q.items() :
+                                            print(f'{i}. {title} : {info[0]}')
+                                            self.rn(q, j)
+                                            break
                                         break
-                                    break
-                                elif c in ['n', 'N']:
-                                    self.second()
-                                    break
-                            break
+                                    elif c in ['n', 'N']:
+                                        self.second()
+                                        break
+                                break
                         elif b in ['n', 'N']:
                             self.second()
                             break
