@@ -185,12 +185,12 @@ class Manager() :
                         pubdate = input('새 출간일 (엔터 시 변경 없음): ')
                         publisher = input('새 출판사 (엔터 시 변경 없음): ')
                         try:
-                            if author == '':
-                                author = self.book[title][0]
-                            if pubdate == '':
-                                pubdate = self.book[title][1]
-                            if publisher == '':
-                                publisher = self.book[title][2]
+                            if author :
+                                self.book[title][0] = author
+                            if pubdate :
+                                self.book[title][1] = pubdate
+                            if publisher:
+                                self.book[title][2] = publisher
                             # self.book[title][0] = author
                             # self.book[title][1] = pubdate
                             # self.book[title][2] = publisher

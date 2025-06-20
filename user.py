@@ -178,8 +178,10 @@ class User() :
                                 except Exception as e:
                                     print(f"파일 저장 중 오류 발생: {e}")
                                 break
-                            elif b in ['n', 'N']:
-                                break
+                            else :
+                                print('대출을 취소하였습니다.')
+                                self.second()
+                                return
                         if b in ['y', 'Y', 'ㅛ']:
                             break
                     else :
