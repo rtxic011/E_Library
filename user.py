@@ -219,19 +219,18 @@ class User() :
             print(f'현재 {self.ID}님이 대출한 책이 없습니다.')
             self.second()
     
-    def rn(self, q, j) :
-        q = q
+    def rn(self, q, j):
         i = 1
-        j = j
-        while True :
+        while q:
             try:
+                print()
                 a = input('반납 할 책의 번호를 입력해주세요. : ')
             except EOFError:
                 print("입력이 중단되었습니다.")
                 return
-            if a.isdigit() :
+            if a.isdigit():
                 a = int(a)
-                if 1 <= a <= len(q) :
+                if 1 <= a <= len(q):
                     name2 = list(q.keys())[a-1]
                     writer = q[name2][0]
                     while True:
@@ -251,28 +250,25 @@ class User() :
                             j += 1
                             del q[name2]
                             self.che()
-                            if len(q) >= 1 :
-                                while True:
-                                    try:
-                                        c = input('추가적으로 반납을 진행하시겠나요?(y/n) : ')
-                                    except EOFError:
-                                        print("입력이 중단되었습니다.")
-                                        return
-                                    if c in ['y', 'Y', 'ㅛ'] and j <= len(q) :
-                                        self.rn(q, j)
-                                        print('[대출 목록]')
-                                        for title, info in q.items() :
-                                            print(f'{i}. {title} : {info[0]}')
-                                            self.rn(q, j)
-                                            break
-                                        break
-                                    elif c in ['n', 'N']:
-                                        self.second()
-                                        break
-                                break
-                        elif b in ['n', 'N']:
-                            self.second()
                             break
+                        elif b in ['n', 'N']:
+                            break
+            if not q:
+                print()
+                print("모든 책을 반납하셨습니다.")
+                self.second()
+                break
+            else:
+                try:
+                    print()
+                    c = input('추가적으로 반납을 진행하시겠나요?(y/n) : ')
+                except EOFError:
+                    print("입력이 중단되었습니다.")
+                    return
+                if c in ['n', 'N']:
+                    self.second()
+                    break
+                # 'y'면 while q: 반복 계속
     
     def list(self) :
         print()

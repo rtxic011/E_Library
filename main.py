@@ -28,8 +28,8 @@ class Main() :
         print('-' * 40)
 
         while True:
-            a = input('1.로그인  2.회원가입  0.종료\n')
-            if a == '1':
+            a = int(input('1.로그인  2.회원가입  0.종료\n'))
+            if a == 1:
                 # print("qwe1")
                 name, check = login.first()
                 # print("qwe2")
@@ -50,7 +50,6 @@ class Main() :
                 print('이용해주셔서 감사합니다.')
                 return 0
             else:
-                print('잘못된 입력입니다. 다시 시도해주세요.')
                 print('잘못된 입력입니다. 다시 시도해주세요.')
 
 ma = Main()
